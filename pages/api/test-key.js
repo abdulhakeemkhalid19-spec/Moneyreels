@@ -1,27 +1,24 @@
 export default async function handler(req, res) {
-  const key = process.env.ANTHROPIC_API_KEY;
+  const key = process.env.GEMINI_API_KEY;
   
   if (!key) {
     return res.status(500).json({ 
       status: "ERROR",
-      message: "API key is missing!" 
+      message: "GEMINI_API_KEY is missing in Vercel!" 
     });
   }
 
   try {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": key,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 100,
-        messages: [{ role: "user", content: "Say hello" }],
-      }),
-    });
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: "Say hello" }] }],
+        }),
+      }
+    );
 
     const data = await response.json();
 
@@ -34,7 +31,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ 
       status: "SUCCESS", 
-      message: "API key works!" 
+      message: "Gemini API key works! 🎉" 
     });
   } catch (error) {
     return res.status(500).json({ 
