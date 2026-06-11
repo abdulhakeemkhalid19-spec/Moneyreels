@@ -1,0 +1,10 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "env": {
+    "NEXTAUTH_URL": "https://money-reels.vercel.app",
+    "NEXTAUTH_SECRET": "your-secret-here"
+  }
+}
