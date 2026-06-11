@@ -10,29 +10,19 @@ export default async function handler(req, res) {
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-002:generateContent?key=${key}`,
+      `https://generativelanguage.googleapis.com/v1beta/models?key=${key}`,
       {
-        method: "POST",
+        method: "GET",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: "Say hello" }] }],
-        }),
       }
     );
 
     const data = await response.json();
-
-    if (data.error) {
-      return res.status(500).json({
-        status: "ERROR",
-        message: data.error.message,
-      });
-    }
+    const models = data.models?.map(m => m.name) || [];
 
     return res.status(200).json({
       status: "SUCCESS",
-      message: "Gemini works! 🎉",
-      reply: data.candidates[0].content.parts[0].text,
+      available_models: models,
     });
   } catch (error) {
     return res.status(500).json({
