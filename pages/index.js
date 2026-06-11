@@ -6,7 +6,6 @@ export default function Home() {
   const [topic, setTopic] = useState("");
   const [script, setScript] = useState("");
   const [loading, setLoading] = useState(false);
-  const [posting, setPosting] = useState(false);
   const [message, setMessage] = useState("");
 
   const generateScript = async () => {
@@ -38,13 +37,11 @@ export default function Home() {
     }}>
       <div style={{ maxWidth: "700px", margin: "0 auto" }}>
 
-        {/* Header */}
         <div style={{ textAlign: "center", marginBottom: "40px" }}>
           <h1 style={{ fontSize: "2.5rem", color: "#00d4ff" }}>💰 MoneyReels</h1>
           <p style={{ color: "#aaa" }}>AI Video Script Generator & YouTube Poster</p>
         </div>
 
-        {/* Auth Button */}
         <div style={{ textAlign: "center", marginBottom: "30px" }}>
           {session ? (
             <div>
@@ -65,7 +62,6 @@ export default function Home() {
           )}
         </div>
 
-        {/* Topic Input */}
         <div style={{ marginBottom: "20px" }}>
           <input
             type="text"
@@ -81,7 +77,6 @@ export default function Home() {
           />
         </div>
 
-        {/* Generate Button */}
         <button
           onClick={generateScript}
           disabled={loading || !topic}
@@ -97,7 +92,6 @@ export default function Home() {
           {loading ? "⏳ Generating Script..." : "🤖 Generate Script"}
         </button>
 
-        {/* Script Output */}
         {script && (
           <div style={{
             background: "#1e1e1e", border: "1px solid #333",
@@ -110,7 +104,6 @@ export default function Home() {
           </div>
         )}
 
-        {/* Message */}
         {message && (
           <p style={{ textAlign: "center", color: "#ff4444" }}>{message}</p>
         )}
@@ -118,4 +111,4 @@ export default function Home() {
       </div>
     </div>
   );
-}
+                                          }
