@@ -1,0 +1,121 @@
+import { useState } from "react";
+import { useSession, signIn, signOut } from "next-auth/react";
+
+export default function Home() {
+  const { data: session } = useSession();
+  const [topic, setTopic] = useState("");
+  const [script, setScript] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [posting, setPosting] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const generateScript = async () => {
+    if (!topic) return;
+    setLoading(true);
+    setScript("");
+    setMessage("");
+    try {
+      const res = await fetch("/api/generate-script", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic }),
+      });
+      const data = await res.json();
+      setScript(data.script);
+    } catch (error) {
+      setMessage("Failed to generate script. Try again!");
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div style={{
+      minHeight: "100vh",
+      background: "linear-gradient(135deg, #0f0f0f, #1a1a2e)",
+      color: "white",
+      fontFamily: "Arial, sans-serif",
+      padding: "20px"
+    }}>
+      <div style={{ maxWidth: "700px", margin: "0 auto" }}>
+
+        {/* Header */}
+        <div style={{ textAlign: "center", marginBottom: "40px" }}>
+          <h1 style={{ fontSize: "2.5rem", color: "#00d4ff" }}>💰 MoneyReels</h1>
+          <p style={{ color: "#aaa" }}>AI Video Script Generator & YouTube Poster</p>
+        </div>
+
+        {/* Auth Button */}
+        <div style={{ textAlign: "center", marginBottom: "30px" }}>
+          {session ? (
+            <div>
+              <p style={{ color: "#00ff88" }}>✅ Connected as {session.user.email}</p>
+              <button onClick={() => signOut()} style={{
+                background: "#ff4444", color: "white",
+                border: "none", padding: "10px 20px",
+                borderRadius: "8px", cursor: "pointer"
+              }}>Disconnect</button>
+            </div>
+          ) : (
+            <button onClick={() => signIn("google")} style={{
+              background: "linear-gradient(135deg, #00d4ff, #00ff88)",
+              color: "black", border: "none",
+              padding: "15px 30px", borderRadius: "10px",
+              cursor: "pointer", fontWeight: "bold", fontSize: "1rem"
+            }}>🔗 Connect YouTube Account</button>
+          )}
+        </div>
+
+        {/* Topic Input */}
+        <div style={{ marginBottom: "20px" }}>
+          <input
+            type="text"
+            placeholder="Enter money topic (e.g. 5 ways to save money in 2026)"
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+            style={{
+              width: "100%", padding: "15px",
+              borderRadius: "10px", border: "1px solid #333",
+              background: "#1e1e1e", color: "white",
+              fontSize: "1rem", boxSizing: "border-box"
+            }}
+          />
+        </div>
+
+        {/* Generate Button */}
+        <button
+          onClick={generateScript}
+          disabled={loading || !topic}
+          style={{
+            width: "100%", padding: "15px",
+            background: loading ? "#333" : "linear-gradient(135deg, #00d4ff, #00ff88)",
+            color: loading ? "#aaa" : "black",
+            border: "none", borderRadius: "10px",
+            cursor: loading ? "not-allowed" : "pointer",
+            fontWeight: "bold", fontSize: "1rem",
+            marginBottom: "20px"
+          }}>
+          {loading ? "⏳ Generating Script..." : "🤖 Generate Script"}
+        </button>
+
+        {/* Script Output */}
+        {script && (
+          <div style={{
+            background: "#1e1e1e", border: "1px solid #333",
+            borderRadius: "10px", padding: "20px",
+            marginBottom: "20px", whiteSpace: "pre-wrap",
+            lineHeight: "1.8", color: "#eee"
+          }}>
+            <h3 style={{ color: "#00d4ff", marginTop: 0 }}>📝 Your Script:</h3>
+            {script}
+          </div>
+        )}
+
+        {/* Message */}
+        {message && (
+          <p style={{ textAlign: "center", color: "#ff4444" }}>{message}</p>
+        )}
+
+      </div>
+    </div>
+  );
+}
