@@ -5,6 +5,10 @@ export default async function handler(req, res) {
 
   const { topic } = req.body;
 
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return res.status(500).json({ error: "Missing ANTHROPIC_API_KEY" });
+  }
+
   try {
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -36,9 +40,14 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
+
+    if (data.error) {
+      return res.status(500).json({ error: data.error.message });
+    }
+
     const script = data.content[0].text;
     return res.status(200).json({ script });
   } catch (error) {
-    return res.status(500).json({ error: "Failed to generate script" });
+    return res.status(500).json({ error: error.message });
   }
 }
