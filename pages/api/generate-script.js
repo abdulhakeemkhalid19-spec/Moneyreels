@@ -11,28 +11,26 @@ export default async function handler(req, res) {
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/v1/models/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contents: [
             {
               parts: [
                 {
                   text: `You are a viral personal finance content creator. 
-                  Create a short, engaging video script about: "${topic}"
+                  Create a short engaging video script about: "${topic}"
                   
                   Format it as:
-                  HOOK: (attention grabbing opening - 1 sentence)
+                  HOOK: (attention grabbing opening)
                   POINT 1: (key insight)
                   POINT 2: (key insight)
                   POINT 3: (key insight)
                   CTA: (call to action)
                   
-                  Keep it under 60 seconds when spoken. Make it punchy and valuable.`,
+                  Keep it under 60 seconds. Make it punchy and valuable.`,
                 },
               ],
             },
@@ -52,4 +50,4 @@ export default async function handler(req, res) {
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
-        }
+}
