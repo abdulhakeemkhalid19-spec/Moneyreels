@@ -51,10 +51,10 @@ export default function Home() {
         setProjectId(data.projectId);
         setMessage("⏳ Video is being created! Click 'Check Video Status' in 1-2 minutes.");
       } else {
-        setMessage("❌ Failed to create video. Try again!");
+        setMessage("❌ " + (data.details || data.error || "Video creation failed!"));
       }
     } catch (error) {
-      setMessage("❌ Video creation failed!");
+      setMessage("❌ Video creation failed: " + error.message);
     }
     setCreating(false);
   };
@@ -256,7 +256,7 @@ export default function Home() {
               fontWeight: "bold", fontSize: "1rem",
               marginBottom: "15px"
             }}>
-          {posting ? "⏳ Posting to YouTube..." : "▶️ Post to YouTube"}
+            {posting ? "⏳ Posting to YouTube..." : "▶️ Post to YouTube"}
           </button>
         )}
 
@@ -264,7 +264,10 @@ export default function Home() {
           <p style={{
             textAlign: "center",
             color: message.includes("✅") ? "#00ff88" : message.includes("⏳") ? "#ffaa00" : "#ff4444",
-            fontSize: "1.1rem"
+            fontSize: "1rem",
+            padding: "10px",
+            background: "#1e1e1e",
+            borderRadius: "10px"
           }}>{message}</p>
         )}
 
