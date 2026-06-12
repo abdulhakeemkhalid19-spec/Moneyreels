@@ -53,7 +53,6 @@ export default async function handler(req, res) {
     });
 
     const text = await response.text();
-    console.log("JSON2Video response:", text);
     const data = JSON.parse(text);
 
     if (data.project) {
@@ -63,9 +62,9 @@ export default async function handler(req, res) {
         message: "Video is being created!",
       });
     } else {
-      return res.status(500).json({ 
-        error: "Failed to create video", 
-        details: data 
+      return res.status(500).json({
+        error: "Failed to create video",
+        details: JSON.stringify(data),
       });
     }
   } catch (error) {
